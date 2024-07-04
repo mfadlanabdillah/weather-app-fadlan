@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import WeatherForm from "./components/WeatherForm";
 import WeatherDisplay from "./components/WeatherDisplay";
 import ForecastDisplay from "./components/ForecastDisplay";
+import SearchHistory from "./components/SearchHistory";
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    const savedHistory =
+      JSON.parse(localStorage.getItem("searchHistory")) || [];
+    setHistory(savedHistory);
+  }, []);
+
+  const saveHistory = (city) => {
+    const newHistory = [city, ...history.filter((item) => item !== city)].slice(
+      0,
+      5
+    );
+    setHistory(newHistory);
+    localStorage.setItem("searchHistory", JSON.stringify(newHistory));
+  };
 
   const fetchWeatherDataByCity = async (city) => {
     setLoading(true);
     try {
-      const apiKey = "d850807fb9903e51261372b73ec1ec31";
+      const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
       const weatherResponse = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
       );
@@ -24,6 +41,7 @@ function App() {
       setWeatherData(weatherResponse.data);
       setForecastData(forecastResponse.data.list);
       setError(null);
+      saveHistory(city);
     } catch (error) {
       setWeatherData(null);
       setForecastData(null);
@@ -36,7 +54,7 @@ function App() {
   const fetchWeatherDataByLocation = async (latitude, longitude) => {
     setLoading(true);
     try {
-      const apiKey = "d850807fb9903e51261372b73ec1ec31";
+      const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
       const weatherResponse = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
       );
@@ -70,6 +88,10 @@ function App() {
             loading={loading}
           />
           <ForecastDisplay forecastData={forecastData} />
+          <SearchHistory
+            history={history}
+            onHistoryClick={fetchWeatherDataByCity}
+          />
         </div>
       </header>
     </div>

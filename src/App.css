@@ -67,3 +67,16 @@ button {
 .forecast-display .card-body {
   padding: 1rem;
 }
+
+.search-history {
+  text-align: center;
+}
+
+.search-history ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.search-history .list-group-item {
+  cursor: pointer;
+}
