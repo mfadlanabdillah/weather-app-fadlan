@@ -8,7 +8,7 @@ function SearchHistory({ history, onHistoryClick }) {
   return (
     <div className="search-history mt-4">
       <h2>Recent Searches</h2>
-      <ul className="list-group">
+      <ul className="list-group mb-2">
         {history.map((city, index) => (
           <li
             key={index}

@@ -27,15 +27,18 @@ function WeatherForm({ onCitySubmit, onLocationSubmit }) {
 
   return (
     <div className="weather-form mb-4">
-      <form onSubmit={handleSubmit} className="form-inline">
+      <form
+        onSubmit={handleSubmit}
+        className="form-inline justify-content-center"
+      >
         <input
           type="text"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Enter city name"
-          className="form-control me-2 mb-2"
+          className="form-control mr-2 mb-2"
         />
-        <button type="submit" className="btn btn-primary me-2">
+        <button type="submit" className="btn btn-primary mr-2 mb-2">
           Get Weather
         </button>
       </form>
