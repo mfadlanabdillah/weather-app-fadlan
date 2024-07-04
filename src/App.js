@@ -11,12 +11,27 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [unit, setUnit] = useState("metric"); // 'metric' for Celsius, 'imperial' for Fahrenheit
+  const [currentCity, setCurrentCity] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
     const savedHistory =
       JSON.parse(localStorage.getItem("searchHistory")) || [];
     setHistory(savedHistory);
   }, []);
+
+  useEffect(() => {
+    if (currentCity) {
+      fetchWeatherDataByCity(currentCity, unit);
+    } else if (currentLocation) {
+      fetchWeatherDataByLocation(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        unit
+      );
+    }
+  }, [unit]);
 
   const saveHistory = (city) => {
     const newHistory = [city, ...history.filter((item) => item !== city)].slice(
@@ -27,21 +42,23 @@ function App() {
     localStorage.setItem("searchHistory", JSON.stringify(newHistory));
   };
 
-  const fetchWeatherDataByCity = async (city) => {
+  const fetchWeatherDataByCity = async (city, unit) => {
     setLoading(true);
     try {
       const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
       const weatherResponse = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${apiKey}`
       );
       const { lat, lon } = weatherResponse.data.coord;
       const forecastResponse = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${apiKey}`
       );
       setWeatherData(weatherResponse.data);
       setForecastData(forecastResponse.data.list);
       setError(null);
       saveHistory(city);
+      setCurrentCity(city);
+      setCurrentLocation(null);
     } catch (error) {
       setWeatherData(null);
       setForecastData(null);
@@ -51,19 +68,21 @@ function App() {
     }
   };
 
-  const fetchWeatherDataByLocation = async (latitude, longitude) => {
+  const fetchWeatherDataByLocation = async (latitude, longitude, unit) => {
     setLoading(true);
     try {
       const apiKey = process.env.REACT_APP_OPENWEATHERMAP_API_KEY;
       const weatherResponse = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
       );
       const forecastResponse = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=${unit}&appid=${apiKey}`
       );
       setWeatherData(weatherResponse.data);
       setForecastData(forecastResponse.data.list);
       setError(null);
+      setCurrentCity(null);
+      setCurrentLocation({ latitude, longitude });
     } catch (error) {
       setWeatherData(null);
       setForecastData(null);
@@ -71,6 +90,10 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleUnit = () => {
+    setUnit((prevUnit) => (prevUnit === "metric" ? "imperial" : "metric"));
   };
 
   return (
@@ -78,19 +101,25 @@ function App() {
       <header className="App-header">
         <div className="container mt-5">
           <h1 className="mb-4">Weather App</h1>
+          <button onClick={toggleUnit} className="btn btn-secondary mb-4">
+            Toggle to {unit === "metric" ? "Fahrenheit" : "Celsius"}
+          </button>
           <WeatherForm
-            onCitySubmit={fetchWeatherDataByCity}
-            onLocationSubmit={fetchWeatherDataByLocation}
+            onCitySubmit={(city) => fetchWeatherDataByCity(city, unit)}
+            onLocationSubmit={(lat, lon) =>
+              fetchWeatherDataByLocation(lat, lon, unit)
+            }
           />
           <WeatherDisplay
             weatherData={weatherData}
             error={error}
             loading={loading}
+            unit={unit}
           />
-          <ForecastDisplay forecastData={forecastData} />
+          <ForecastDisplay forecastData={forecastData} unit={unit} />
           <SearchHistory
             history={history}
-            onHistoryClick={fetchWeatherDataByCity}
+            onHistoryClick={(city) => fetchWeatherDataByCity(city, unit)}
           />
         </div>
       </header>

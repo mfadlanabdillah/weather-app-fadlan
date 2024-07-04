@@ -1,6 +1,6 @@
 import React from "react";
 
-function WeatherDisplay({ weatherData, error, loading }) {
+function WeatherDisplay({ weatherData, error, loading, unit }) {
   if (loading) {
     return <div className="mt-4">Loading...</div>;
   }
@@ -14,10 +14,14 @@ function WeatherDisplay({ weatherData, error, loading }) {
   }
 
   const { name, main, weather } = weatherData;
+  const temperatureUnit = unit === "metric" ? "°C" : "°F";
+
   return (
     <div className="mt-4">
       <h2 className="mb-4">Weather in {name}</h2>
-      <p className="mb-2">Temperature: {main.temp} °C</p>
+      <p className="mb-2">
+        Temperature: {main.temp} {temperatureUnit}
+      </p>
       <p className="mb-2">Condition: {weather[0].description}</p>
     </div>
   );

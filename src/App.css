@@ -80,3 +80,7 @@ button {
 .search-history .list-group-item {
   cursor: pointer;
 }
+
+.toggle-button {
+  margin-bottom: 1rem;
+}

@@ -1,11 +1,10 @@
 import React from "react";
 
-function ForecastDisplay({ forecastData }) {
+function ForecastDisplay({ forecastData, unit }) {
   if (!forecastData) {
     return null;
   }
 
-  // Group forecast data by day
   const groupedData = forecastData.reduce((acc, curr) => {
     const date = new Date(curr.dt * 1000).toLocaleDateString();
     if (!acc[date]) {
@@ -14,6 +13,8 @@ function ForecastDisplay({ forecastData }) {
     acc[date].push(curr);
     return acc;
   }, {});
+
+  const temperatureUnit = unit === "metric" ? "°C" : "°F";
 
   return (
     <div className="forecast-display mt-4">
@@ -27,7 +28,8 @@ function ForecastDisplay({ forecastData }) {
                 {groupedData[date].map((data, idx) => (
                   <p key={idx} className="card-text">
                     {new Date(data.dt * 1000).toLocaleTimeString()}:{" "}
-                    {data.main.temp} °C, {data.weather[0].description}
+                    {data.main.temp} {temperatureUnit},{" "}
+                    {data.weather[0].description}
                   </p>
                 ))}
               </div>
