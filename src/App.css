@@ -53,3 +53,34 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
+.forecast-display {
+  text-align: center;
+}
+
+.forecast-display .card {
+  background-color: #282c34;
+  color: white;
+  border: none;
+}
+
+.forecast-display .card-body {
+  padding: 1rem;
+}
+
+.search-history {
+  text-align: center;
+}
+
+.search-history ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.search-history .list-group-item {
+  cursor: pointer;
+}
+
+.toggle-button {
+  margin-bottom: 1rem;
+}
