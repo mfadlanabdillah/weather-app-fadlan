@@ -53,3 +53,17 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
+.forecast-display {
+  text-align: center;
+}
+
+.forecast-display .card {
+  background-color: #282c34;
+  color: white;
+  border: none;
+}
+
+.forecast-display .card-body {
+  padding: 1rem;
+}
