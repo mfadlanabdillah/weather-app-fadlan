@@ -36,9 +36,9 @@ function WeatherForm({ onCitySubmit, onLocationSubmit }) {
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Enter city name"
-          className="form-control mr-2 mb-2"
+          className="form-control me-2 mb-2"
         />
-        <button type="submit" className="btn btn-primary mr-2 mb-2">
+        <button type="submit" className="btn btn-primary me-2 mb-2">
           Get Weather
         </button>
       </form>

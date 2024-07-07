@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import WeatherForm from "./components/WeatherForm";
 import WeatherDisplay from "./components/WeatherDisplay";
 import ForecastDisplay from "./components/ForecastDisplay";
 import SearchHistory from "./components/SearchHistory";
+import "./App.css";
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
@@ -14,6 +16,7 @@ function App() {
   const [unit, setUnit] = useState("metric"); // 'metric' for Celsius, 'imperial' for Fahrenheit
   const [currentCity, setCurrentCity] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [theme, setTheme] = useState("light"); // 'light' for Light Mode, 'dark' for Dark Mode
 
   useEffect(() => {
     const savedHistory =
@@ -96,13 +99,20 @@ function App() {
     setUnit((prevUnit) => (prevUnit === "metric" ? "imperial" : "metric"));
   };
 
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
       <header className="App-header">
         <div className="container mt-5">
-          <h1 className="mb-4">Weather App</h1>
+          <h1 className="mb-4">Fadlan's Weather App</h1>
           <button onClick={toggleUnit} className="btn btn-secondary mb-4">
             Toggle to {unit === "metric" ? "Fahrenheit" : "Celsius"}
+          </button>
+          <button onClick={toggleTheme} className="btn btn-secondary mb-4">
+            Toggle to {theme === "light" ? "Dark Mode" : "Light Mode"}
           </button>
           <WeatherForm
             onCitySubmit={(city) => fetchWeatherDataByCity(city, unit)}

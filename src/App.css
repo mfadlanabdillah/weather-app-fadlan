@@ -2,6 +2,28 @@
   text-align: center;
 }
 
+/* Light Theme */
+.App.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.App.light .btn-secondary {
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+/* Dark Theme */
+.App.dark {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+}
+
+.App.dark .btn-secondary {
+  background-color: #34495e;
+  color: #ffffff;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -14,16 +36,15 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: inherit; /* Change from fixed color to inherit */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: inherit; /* Change from fixed color to inherit */
 }
-
 
 .App-link {
   color: #61dafb;
@@ -59,8 +80,8 @@ button {
 }
 
 .forecast-display .card {
-  background-color: #282c34;
-  color: white;
+  background-color: inherit;
+  color: inherit;
   border: none;
 }
 
